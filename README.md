@@ -42,7 +42,7 @@ docker stop ov
 
 ### Disable access control in X server  
 X servers denies remote access in default. You need to disable this access control to make the X server accepts the drawing request from remote programs.  
- To do this, Linux user needs to issue '`xhost +`' command.  
+ To do this, Linux user needs to issue '`xhost +`' command on the host system.  
  Windows user must refer to the X server document and disable the access control. '`VcXsrv`' has `Disable access control` check box in the dialog box which appears when you start the `XLaunch` app.    
 ![Xlaunch](resources/xlaunch.png)  
 

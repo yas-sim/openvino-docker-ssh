@@ -21,9 +21,18 @@ Container will start and resides as a background process (daemon). SSH server wi
 docker run -d --rm -p 22:22 --name ov -it openvino_dev_ssh
 ```
 
-**Linux users only:** If you want to use integrated GPU or VPU (Myriad-X), add appropriate options to expose those devices to the container. Please refer to the official OpenVINO document for details.  
-- [Run the Docker* Image for GPU](https://docs.openvino.ai/latest/openvino_docs_install_guides_installing_openvino_docker_linux.html#run-the-docker-image-for-gpu)  
-- [Use a Docker* Image for Intel® Neural Compute Stick 2](https://docs.openvino.ai/latest/openvino_docs_install_guides_installing_openvino_docker_linux.html#use-a-docker-image-for-intel-neural-compute-stick-2)
+**Linux users only**
+- Enable integrated GPU.  
+```sh
+docker run -d --rm -p 22:22 --name ov -it --device /dev/dri:/dev/dri openvino_dev_ssh
+```
+- Enable VPU (Myriad-X, Neural Compute Stick 2:NCS2)
+```sh
+docker run -d --rm -p 22:22 --name ov -it --device=/dev/ion:/dev/ion -v /var/tmp:/var/tmp openvino_dev_ssh
+```
+- Please refer to the OpenVINO official web documentation for details.  
+[Run the Docker* Image for GPU](https://docs.openvino.ai/latest/openvino_docs_install_guides_installing_openvino_docker_linux.html#run-the-docker-image-for-gpu)  
+[Use a Docker* Image for Intel® Neural Compute Stick 2](https://docs.openvino.ai/latest/openvino_docs_install_guides_installing_openvino_docker_linux.html#use-a-docker-image-for-intel-neural-compute-stick-2)
 ## How to connect to the container with ssh
 You can use any ssh client program to connect to the container.  
 ```sh

@@ -101,13 +101,25 @@ cp -r ${INTEL_OPENVINO_DIR}/deployment_tools/inference_engine/samples/python/ ~/
 ```
 
 ## Running OpenVINO sample apps
-- Image classification  
+- Image classification sample app  
+
+Copy input image files.
 ```sh
+cd ~
 cp $INTEL_OPENVINO_DIR/deployment_tools/demo/car.png .
 cp $INTEL_OPENVINO_DIR/deployment_tools/demo/car_1.bmp .
+```
+Download a DL model with model downloader.
+```sh
 omz_downloader --name googlenet-v1-tf
 omz_converter --name googlenet-v1-tf --precisions FP16
+```
+Run a C++ image classification sample app.
+```sh
 inference_engine_cpp_samples_build/intel64/Release/classification_sample_async -m public/googlenet-v1-tf/FP16/googlenet-v1-tf.xml -i car.png 
+```
+Run a Python image classification sample app.
+```sh
 python3 python_demos/hello_classification/hello_classification.py -m public/googlenet-v1-tf/FP16/googlenet-v1-tf.xml -i car.png 
 
 ```

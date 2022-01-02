@@ -20,15 +20,16 @@ Container will start and resides as a background process (daemon). SSH server wi
 ```sh
 docker run -d --rm -p 22:22 --name ov -it openvino_dev_ssh
 ```
+**Note:** To enable X11 redirect on Ubuntu system, user needs to add `-e DISPLAY=${DISPLAY} -v /tmp/.X11-unix/:/tmp/.X11-unix/` options. Refer to 'How to enable X11 redirect (Host=Ubuntu)' section for details.
 
 **Linux users only**
 - Enable integrated GPU.  
 ```sh
-docker run -d --rm -p 22:22 --name ov -it --device /dev/dri:/dev/dri openvino_dev_ssh
+docker run -d --rm -p 22:22 --name ov -it --device=/dev/dri openvino_dev_ssh
 ```
 - Enable VPU (Myriad-X, Neural Compute Stick 2:NCS2)
 ```sh
-docker run -d --rm -p 22:22 --name ov -it --device=/dev/ion:/dev/ion -v /var/tmp:/var/tmp openvino_dev_ssh
+docker run -d --rm -p 22:22 --name ov -it --device=/dev/ion -v /var/tmp:/var/tmp openvino_dev_ssh
 ```
 - Please refer to the OpenVINO official web documentation for details.  
 [Run the Docker* Image for GPU](https://docs.openvino.ai/latest/openvino_docs_install_guides_installing_openvino_docker_linux.html#run-the-docker-image-for-gpu)  
@@ -45,14 +46,15 @@ ssh ovuser@localhost
 docker stop ov
 ```
 
-## How to enable X11 redirect
+## How to enable X11 redirect (Host=Windows)
 
-**Note1:** Win10/11 users need to install and start a X server program such as `VcXsrv`.  
+### Install Xserver software
+Win10/11 users need to install and start a X server program such as `VcXsrv`.  
 
-### Disable access control in X server  
-X servers denies remote access in default. You need to disable this access control to make the X server accepts the drawing request from remote programs.  
- To do this, Linux user needs to issue '`xhost +`' command on the host system.  
- Windows user must refer to the X server document and disable the access control. '`VcXsrv`' has `Disable access control` check box in the dialog box which appears when you start the `XLaunch` app.    
+### Disable access control in Xserver on host
+Xservers denies remote access in default. You need to disable this access control to make the Xserver accepts the drawing request from remote programs.  
+Windows user must refer to the Xserver document and disable the access control.  
+'`VcXsrv`' has `Disable access control` check box in the dialog box which appears when you start the `XLaunch` app.    
 ![Xlaunch](resources/xlaunch.png)  
 
 ### Set `DISPLAY` environment in the container to redirect X11 drawing to the host.
@@ -61,6 +63,58 @@ X servers denies remote access in default. You need to disable this access contr
 Note: 192.168.1.21 is the host IP address
 ```
 - Now you can run the X11 apps in the container
+
+## How to enable X11 redirect (Host=Ubuntu)
+
+### Disable access control in Xserver on host
+Xservers denies remote access in default. You need to disable this access control to make the Xserver accepts the drawing request from remote programs.  
+```sh
+xhost +
+```
+
+### Share host X authentication info and DISPLAY environment variable
+Add `-e DISPLAY=${DISPLAY} -v /tmp/.X11-unix/:/tmp/.X11-unix/` to `docker run` command line to share the host X authentication information with the container.
+
+```sh
+docker run -d --rm -p 22:22 --name ov -it -e DISPLAY=${DISPLAY} -v /tmp/.X11-unix/:/tmp/.X11-unix/ openvino_dev_ssh
+```
+- Now you can run the X11 apps in the container
+
+
+## Building OpenVINO sample apps in the container  
+
+- Build C++ sample apps  
+Built binaries can be found in `~/inference_engine_cpp_samples_build/intel64/Release/`
+```sh
+cd ${INTEL_OPENVINO_DIR}/deployment_tools/inference_engine/samples/cpp/
+./build_samples.sh 
+```
+- Build C sample apps  
+Built binaries can be found in `~/inference_engine_c_samples_build/intel64/Release/`
+```sh
+cd ${INTEL_OPENVINO_DIR}/deployment_tools/inference_engine/samples/c/
+./build_samples.sh 
+```
+-  Copy Python demos to the user directory  
+```sh
+cp -r ${INTEL_OPENVINO_DIR}/deployment_tools/inference_engine/samples/python/ ~/python_demos
+```
+
+## Running OpenVINO sample apps
+- Image classification  
+```sh
+cp $INTEL_OPENVINO_DIR/deployment_tools/demo/car.png .
+cp $INTEL_OPENVINO_DIR/deployment_tools/demo/car_1.bmp .
+omz_downloader --name googlenet-v1-tf
+omz_converter --name googlenet-v1-tf --precisions FP16
+inference_engine_cpp_samples_build/intel64/Release/classification_sample_async -m public/googlenet-v1-tf/FP16/googlenet-v1-tf.xml -i car.png 
+python3 python_demos/hello_classification/hello_classification.py -m public/googlenet-v1-tf/FP16/googlenet-v1-tf.xml -i car.png 
+
+```
+
+## Using webCam from the apps in the container (Linux only) 
+Linux can share USB webCam device with the container.
+Add `--device=/dev/video0` to `docker run` command line.
 
 
 ## Others

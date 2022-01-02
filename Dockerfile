@@ -25,7 +25,7 @@ ARG USERNAME="ovuser"
 ARG UID=1001
 ARG GID=1001
 RUN groupadd --gid ${GID} ${USERNAME}
-RUN useradd --create-home --shell /bin/bash --uid ${UID} --gid ${GID} -G sudo ${USERNAME}
+RUN useradd --create-home --shell /bin/bash --uid ${UID} --gid ${GID} -G sudo,video,users ${USERNAME}
 RUN echo "${USERNAME}:${USERNAME}" | chpasswd
 RUN echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
@@ -33,6 +33,7 @@ RUN echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 USER ${USERNAME}
 WORKDIR /home/${USERNAME}
 RUN echo "source /opt/intel/openvino/bin/setupvars.sh" >> /home/${USERNAME}/.bashrc
+RUN echo "export QT_X11_NO_MITSHM=1" >> .bashrc
 # Create aliases to the OpenVINO tools for user convenience
 RUN echo "alias omz_downloader='${INTEL_OPENVINO_DIR}/deployment_tools/open_model_zoo/tools/downloader/downloader.py'" >> .bashrc
 RUN echo "alias omz_converter='${INTEL_OPENVINO_DIR}/deployment_tools/open_model_zoo/tools/downloader/converter.py'" >> .bashrc

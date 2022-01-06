@@ -38,6 +38,7 @@ docker run -d --rm -p 22:22 --name ov -it --device=/dev/ion -v /var/tmp:/var/tmp
 [Use a Docker* Image for Intel® Neural Compute Stick 2](https://docs.openvino.ai/latest/openvino_docs_install_guides_installing_openvino_docker_linux.html#use-a-docker-image-for-intel-neural-compute-stick-2)
 ## How to connect to the container with ssh
 You can use any ssh client program to connect to the container.  
+Note: password is '`ovuser`'.  
 ```sh
 ssh ovuser@localhost
 ```

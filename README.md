@@ -1,9 +1,9 @@
-# SSH and X11 forwading enabled OpenVINO Docker image
+# SSH and X11 forwarding enabled OpenVINO Docker image
 
 ## Summary
 - Provides `Dockerfile` for OpenVINO developers
 - Enable SSH for easy development
-- Enable X11 redirect to display grapnics on the host environment
+- Enable X11 redirect to display graphics on the host environment
 - Setup some useful aliases for easy access to the OpenVINO tools
 - Setup and start OpenVINO development in 5 min
 

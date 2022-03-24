@@ -7,6 +7,8 @@
 - Setup some useful aliases for easy access to the OpenVINO tools
 - Setup and start OpenVINO development in 5 min
 
+* Added Dockerfile for *OpenVINO 2022.1*. (`./dockerfile_openvino2022.1/Dockerfile`)
+
 ## Description
 Intel provides several types of OpenVINO Docker images but those images doesn't enable SSH. This project provides a `Dockerfile` which enables SSH. Developers can connect to the container with SSH client, and use X11 redirect to display graphics on the host machine.  
 
